@@ -40,6 +40,23 @@ commands:
             #  Add revert code here. You can find this in the Getting Started section.
               exit 1
             fi
+  install_awscli:
+    description: Install AWS CLI v2
+    steps:
+      - run:
+          name: Install AWS CLI v2
+          command: |
+            curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            unzip awscliv2.zip
+            sudo ./aws/install
+
+  install_ansible:
+    description: Install Ansible
+    steps:
+      - run:
+          name: Install Ansible
+          command: |
+            python3 -m pip install --user ansible
             
 jobs:
   build-frontend:
@@ -172,22 +189,25 @@ jobs:
 
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: python:3.9-alpine3.11
       # Docker image here that supports Ansible
     steps:
       - checkout
       # Add ssh keys with fingerprint
+      - add_ssh_keys:
+          fingerprints: ["3b:03:42:4b:90:57:bf:d9:0a:4d:20:79:0c:20:87:6a"]
       # attach workspace
-      - run:
-          name: Install dependencies
-          command: |
-            # Your code here
-            exit 1
+      - attach_workspace:
+          at: ~/
+      - install_awscli
+      - install_ansible
       - run:
           name: Configure server
           command: |
-            # Your code here
-            exit 1
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      - destroy-environment
       # Here's where you will add some code to rollback on failure      
 
   run-migrations:
