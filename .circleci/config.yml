@@ -360,11 +360,6 @@ jobs:
             else
               exit 1
             fi
-      # - run:
-      #     name: Backend smoke test.
-      #     command: |
-            
-      
 
       # Here's where you will add some code to rollback on failure 
       - destroy-environment
