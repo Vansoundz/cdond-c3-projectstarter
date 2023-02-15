@@ -164,6 +164,13 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Save Old Workflow ID to kvdb.io
+          command: |
+            export OLD_WORKFLOW_ID=$(aws cloudformation \
+                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                --no-paginate --output text)
+            curl https://kvdb.io/PQRs6osS6mJTX9RUaGjncV/old_id -d "${OLD_WORKFLOW_ID}"
+      - run:
           name: Install tar and gzip
           command: yum -y install tar gzip
       - run:
@@ -367,13 +374,6 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
-      - run:
-          name: Save Old Workflow ID to kvdb.io
-          command: |
-            export OLD_WORKFLOW_ID=$(aws cloudformation \
-                list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                --no-paginate --output text)
-            curl https://kvdb.io/PQRs6osS6mJTX9RUaGjncV/old_id -d "${OLD_WORKFLOW_ID}"
       - run:
           name: Update cloudfront distribution
           command: |
