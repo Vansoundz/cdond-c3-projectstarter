@@ -1,2 +1,4 @@
 URL01: https://github.com/Vansoundz/cdond-c3-projectstarter
-URL02: http://udapeople-26c159c.s3-website-us-east-1.amazonaws.com
+URL02: http://udapeople-1cb541f.s3-website-us-east-1.amazonaws.com
+
+cloudfront: http://d3jemsklrhmpog.cloudfront.net
